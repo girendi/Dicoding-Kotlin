@@ -24,12 +24,10 @@ class MainActivity : AppCompatActivity(), MainView{
     private var teams: MutableList<Team> = mutableListOf()
     private lateinit var presenter: MainPresenter
     private lateinit var adapter: MainAdapter
-
     private lateinit var listTeam: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var spinner: Spinner
-
     private lateinit var leagueName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +41,7 @@ class MainActivity : AppCompatActivity(), MainView{
 
             spinner = spinner ()
             swipeRefresh = swipeRefreshLayout {
-                setColorSchemeResources(
-                    colorAccent,
+                setColorSchemeResources(colorAccent,
                     android.R.color.holo_green_light,
                     android.R.color.holo_orange_light,
                     android.R.color.holo_red_light)
@@ -64,12 +61,13 @@ class MainActivity : AppCompatActivity(), MainView{
                 }
             }
         }
-        adapter = MainAdapter(teams)
-        listTeam.adapter = adapter
 
         val spinnerItems = resources.getStringArray(league)
         val spinnerAdapter = ArrayAdapter(applicationContext, android.R.layout.simple_spinner_dropdown_item, spinnerItems)
         spinner.adapter = spinnerAdapter
+
+        adapter = MainAdapter(teams)
+        listTeam.adapter = adapter
 
         val request = ApiRepository()
         val gson = Gson()
@@ -83,6 +81,7 @@ class MainActivity : AppCompatActivity(), MainView{
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
         swipeRefresh.onRefresh {
             presenter.getTeamList(leagueName)
         }

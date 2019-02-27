@@ -10,6 +10,7 @@ import org.jetbrains.anko.uiThread
 class MainPresenter(private val view: MainView,
                     private val apiRepository: ApiRepository,
                     private val gson: Gson) {
+
     fun getTeamList(league: String?) {
         view.showLoading()
         doAsync {
@@ -24,4 +25,5 @@ class MainPresenter(private val view: MainView,
             }
         }
     }
+
 }
