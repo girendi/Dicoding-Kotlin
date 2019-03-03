@@ -2,4 +2,10 @@
 <resources>
     <item name="team_badge" type="id"/>
     <item name="team_name" type="id"/>
+    <item name="txt_schedule" type="id"/>
+    <item name="txt_hometeam" type="id"/>
+    <item name="txt_homescore" type="id"/>
+    <item name="txt_versus" type="id"/>
+    <item name="txt_awayscore" type="id"/>
+    <item name="txt_awayteam" type="id"/>
 </resources>
