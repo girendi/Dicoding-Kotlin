@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="txt_schedule" type="id"/>
+    <item name="txt_hometeam" type="id"/>
+    <item name="txt_awayteam" type="id"/>
+    <item name="txt_homescore" type="id"/>
+    <item name="txt_awayscore" type="id"/>
+    <item name="txt_versus" type="id"/>
+    <item name="header_layout" type="id"/>
+    <item name="btn_next" type="id"/>
+    <item name="btn_last" type="id"/>
+    <item name="frame_layout" type="id"/>
+</resources>

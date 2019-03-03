@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Submission2</string>
+    <string name="item_eventdetail_id">item_eventdetail_id</string>
+    <string name="item_home_id">item_home_id</string>
+    <string name="item_away_id">item_away_id</string>
 </resources>
