@@ -1,5 +1,6 @@
 package com.d4ti.submission2.view
 
+import android.graphics.Typeface
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -19,42 +20,59 @@ class ContentUI : AnkoComponent<ViewGroup> {
 
             textView {
                 id = R.id.txt_schedule
+                textColor = R.color.colorYellow
                 textSize = 18f
                 gravity = Gravity.CENTER
+                setTypeface(null, Typeface.BOLD)
             }.lparams(width = matchParent, height = wrapContent){
                 bottomMargin = dip(5)
             }
 
             linearLayout {
-                lparams(width = wrapContent, height = matchParent)
+                lparams(width = wrapContent, height = matchParent){
+                    bottomMargin = dip(8)
+                }
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_HORIZONTAL
 
                 textView {
                     id = R.id.txt_hometeam
                     textSize = 20f
+                    textColor = R.color.colorBlack
                 }.lparams(width = wrapContent, height = wrapContent)
 
                 textView {
                     id = R.id.txt_homescore
                     textSize = 24f
-                }.lparams(width = wrapContent, height = wrapContent)
+                    setTypeface(null, Typeface.BOLD)
+                }.lparams(width = wrapContent, height = wrapContent){
+                    leftMargin = dip(8)
+                }
 
                 textView {
                     id = R.id.txt_versus
                     text = "Vs"
                     textSize = 16f
-                }.lparams(width = wrapContent, height = wrapContent)
+                    gravity = Gravity.CENTER
+                }.lparams(width = wrapContent, height = wrapContent){
+                    leftMargin = dip(4)
+                }
 
                 textView {
                     id = R.id.txt_awayscore
                     textSize = 24f
-                }.lparams(width = wrapContent, height = wrapContent)
+                    setTypeface(null, Typeface.BOLD)
+                }.lparams(width = wrapContent, height = wrapContent){
+                    leftMargin = dip(4)
+                }
 
                 textView {
                     id = R.id.txt_awayteam
                     textSize = 20f
-                }.lparams(width = wrapContent, height = wrapContent)
+                    textColor = R.color.colorBlack
+                }.lparams(width = wrapContent, height = wrapContent){
+                    leftMargin = dip(8)
+                }
             }
 
         }

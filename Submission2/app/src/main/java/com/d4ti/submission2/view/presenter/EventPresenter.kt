@@ -16,13 +16,13 @@ class EventPresenter(private val view: EventView,
         view.showLoading()
         doAsync {
             val data = gson.fromJson(apiRepository
-                .doRequest(TheSportDBApi.getNext2("4328")),
+                .doRequest(TheSportDBApi.getNext()),
                 EventResponse::class.java
             )
 
             uiThread {
-                view.hideLoading()
                 view.showTeamList(data.events)
+                view.hideLoading()
             }
         }
     }
@@ -36,8 +36,8 @@ class EventPresenter(private val view: EventView,
             )
 
             uiThread {
-                view.hideLoading()
                 view.showTeamList(data.events)
+                view.hideLoading()
             }
         }
     }

@@ -10,4 +10,9 @@
     <item name="btn_next" type="id"/>
     <item name="btn_last" type="id"/>
     <item name="frame_layout" type="id"/>
+    <item name="txt_homegoal" type="id"/>
+    <item name="txt_awaygoal" type="id"/>
+    <item name="txt_awayshot" type="id"/>
+    <item name="txt_homeshot" type="id"/>
+    <item name="pbDetailEvent" type="id"/>
 </resources>
