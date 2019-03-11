@@ -1,20 +1,30 @@
 package com.d4ti.submission2.view
 
+import android.database.sqlite.SQLiteConstraintException
 import android.graphics.Typeface
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.d4ti.submission2.R
+import com.d4ti.submission2.R.menu.detail_menu
+import com.d4ti.submission2.R.id.add_to_favorite
+import com.d4ti.submission2.R.drawable.ic_add_to_favorites
+import com.d4ti.submission2.R.drawable.ic_added_to_favorites
 import com.d4ti.submission2.R.color.*
 import com.d4ti.submission2.model.Event
 import com.d4ti.submission2.model.Team
 import com.d4ti.submission2.R.string.*
 import com.d4ti.submission2.api.ApiRepository
+import com.d4ti.submission2.helper.database
+import com.d4ti.submission2.model.Favorite
 import com.d4ti.submission2.util.invisible
 import com.d4ti.submission2.util.visible
 import com.d4ti.submission2.view.interfaceView.DetailView
@@ -22,6 +32,11 @@ import com.d4ti.submission2.view.presenter.DetailPresenter
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.*
+import org.jetbrains.anko.db.classParser
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.select
+import org.jetbrains.anko.db.delete
+import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
@@ -52,8 +67,14 @@ class DetailActivity : AppCompatActivity(), DetailView {
     private lateinit var progressBar: ProgressBar
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
+    private var menuItem: Menu? = null
+    private var isFavorite: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        supportActionBar?.title = "Team Detail"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (intent.extras != null) {
             idEventDetail = intent.getStringExtra(getString(item_eventdetail_id))
@@ -215,6 +236,81 @@ class DetailActivity : AppCompatActivity(), DetailView {
         getEventDetail()
     }
 
+    private fun favoriteState(){
+        database.use {
+            val result = select(Favorite.TABLE_FAVORITE)
+                .whereArgs("(EVENT_ID = {id})",
+                    "id" to idEventDetail)
+            val favorite = result.parseList(classParser<Favorite>())
+            if (!favorite.isEmpty()) isFavorite = true
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(detail_menu, menu)
+        menuItem = menu
+        setFavorite()
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId){
+            android.R.id.home ->{
+                finish()
+                true
+            }
+            add_to_favorite -> {
+                if (isFavorite) removeFromFavorite() else addToFavorite()
+
+                isFavorite = !isFavorite
+                setFavorite()
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun addToFavorite(){
+        try {
+            database.use {
+                insert(
+                    Favorite.TABLE_FAVORITE,
+                    Favorite.EVENT_ID to eventDetail.idEvent,
+                    Favorite.HOME_ID to eventDetail.idHomeTeam,
+                    Favorite.AWAY_ID to eventDetail.idAwayTeam,
+                    Favorite.HOME_NAME to eventDetail.strHomeTeam,
+                    Favorite.AWAY_NAME to eventDetail.strAwayTeam,
+                    Favorite.HOME_SCORE to eventDetail.intHomeScore,
+                    Favorite.AWAY_SCORE to eventDetail.intAwayScore,
+                    Favorite.DATE to eventDetail.dateEvent
+                    )
+            }
+            swipeRefresh.snackbar("Added to favorite").show()
+        } catch (e: SQLiteConstraintException){
+            swipeRefresh.snackbar(e.localizedMessage).show()
+        }
+    }
+
+    private fun removeFromFavorite(){
+        try {
+            database.use {
+                delete(Favorite.TABLE_FAVORITE, "(EVENT_ID = {id})",
+                    "id" to idEventDetail)
+            }
+            swipeRefresh.snackbar("Removed from favorite").show()
+        } catch (e: SQLiteConstraintException){
+            swipeRefresh.snackbar(e.localizedMessage).show()
+        }
+    }
+
+    private fun setFavorite() {
+        if (isFavorite)
+            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, ic_added_to_favorites)
+        else
+            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, ic_add_to_favorites)
+    }
+
     private fun bindView(){
         swipeRefresh.isRefreshing = false
         tvDateEvent.text = eventDetail.dateEvent
@@ -240,6 +336,7 @@ class DetailActivity : AppCompatActivity(), DetailView {
     }
 
     private fun getEventDetail(){
+        favoriteState()
         presenter = DetailPresenter(this, ApiRepository(), Gson())
         presenter.getEventDetail(idEventDetail, itemHomeId, itemAwayId)
 

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.widget.LinearLayout
 import com.d4ti.submission2.R
+import com.d4ti.submission2.view.fragment.FavoriteFragment
 import com.d4ti.submission2.view.fragment.LastFragment
 import com.d4ti.submission2.view.fragment.NextFragment
 import org.jetbrains.anko.*
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                         val nextFragment = NextFragment.nextInstance()
                         addFragment(nextFragment)
                     }
-                }.lparams(width = 0, height = wrapContent, weight = 2f)
+                }.lparams(width = 0, height = wrapContent, weight = 3f)
 
                 button{
                     text = "Last"
@@ -36,7 +37,16 @@ class MainActivity : AppCompatActivity() {
                         val lastFragment = LastFragment.lastInstance()
                         addFragment(lastFragment)
                     }
-                }.lparams(width = 0, height = wrapContent, weight = 2f)
+                }.lparams(width = 0, height = wrapContent, weight = 3f)
+
+                button{
+                    text = "Favorite"
+                    id = R.id.btn_favorite
+                    setOnClickListener {
+                        val favoriteFragment = FavoriteFragment.lastInstance()
+                        addFragment(favoriteFragment)
+                    }
+                }.lparams(width = 0, height = wrapContent, weight = 3f)
 
             }.lparams(width = matchParent, height = wrapContent)
 
